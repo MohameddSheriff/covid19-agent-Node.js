@@ -18,7 +18,7 @@ const questions = [
         validate: value => {
             if(value=="exit")
             process.exit(0);
-            
+
             const pass = value.toLowerCase().match(
                 /^london$|^paris$|^munich$/
                 );
@@ -88,7 +88,10 @@ const chat = () => {
         .catch(error => {
             console.error(error);
         });
-  });
+  })
+  .catch(error => {
+    console.error(error);
+    });;
 }
 
 chat();

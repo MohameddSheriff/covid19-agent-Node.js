@@ -104,6 +104,7 @@ __Note__: the variable names are names of your choice.
 
       ]
      ```
+     The validate function checks that the input is from 3 hard-coded cities (London, Munich, Paris) and prompts the user to enter a valid city if the user entered neither of those. Also the function exits the program if the user input was "exit"
 1.  Now it is time to write our chat function
     ```
     const chat = () => {
