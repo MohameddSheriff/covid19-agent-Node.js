@@ -34,8 +34,8 @@ const questions = [
 
 const chat = () => {
     inquirer
-  .prompt(questions)
-  .then(answers => {
+    .prompt(questions)
+    .then(answers => {
 
         const countryRequest = {
             method: 'GET',
@@ -57,7 +57,7 @@ const chat = () => {
                 tag_labels: 'city',
                 annotate: `trigram:${answers.city}`,
                 count: 1,
-                fields: 'snippet',
+                fields: 'snippet,name',
                 order_by: '-trigram',
                 account: process.env.CITY_ACCOUNT,
                 token: process.env.CITY_TOKEN
@@ -75,23 +75,22 @@ const chat = () => {
             }
           };
 
-        Promise.all([axios.request(countryRequest),axios.request(weatherRequest),axios.request(cityRequest)])
-        .then(response => {
+       return Promise.all([axios.request(countryRequest),axios.request(weatherRequest),axios.request(cityRequest)])
+        })
+    .then(response => {
 
             if (response[0].data.todayCases > 10000)
-            console.log(`${answers.city}! Amazing choice!\n${response[2].data.results[0].snippet}\nThe weather currently is ${response[1].data.current.condition.text} and the tempreture feels like ${response[1].data.current.temp_c}C\nHowever, COVID-19 is widely spread in ${countries.get(answers.city)}! In the last 24 Hours, there are ${response[0].data.todayCases} new cases reported..`);
+            console.log(`${response[2].data.results[0].name}! Amazing choice!\n${response[2].data.results[0].snippet}\nThe weather currently is ${response[1].data.current.condition.text} and the tempreture feels like ${response[1].data.current.temp_c}C\nHowever, COVID-19 is widely spread in ${countries.get(response[2].data.results[0].name)}! In the last 24 Hours, there are ${response[0].data.todayCases} new cases reported..`);
             else
-            console.log(`${answers.city}! Amazing choice!\n${response[2].data.results[0].snippet}\nThe weather currently is ${response[1].data.current.condition.text} and the tempreture feels like ${response[1].data.current.temp_c}C\nCOVID-19 situation in ${countries.get(answers.city)} is significantly getting better! In the last 24 Hours, only ${response[0].data.todayCases} new cases were reported..`);
+            console.log(`${response[2].data.results[0].name}! Amazing choice!\n${response[2].data.results[0].snippet}\nThe weather currently is ${response[1].data.current.condition.text} and the tempreture feels like ${response[1].data.current.temp_c}C\nCOVID-19 situation in ${countries.get(response[2].data.results[0].name)} is significantly getting better! In the last 24 Hours, only ${response[0].data.todayCases} new cases were reported..`);
 
             chat();
-        })
-        .catch(error => {
-            console.error(error);
-        });
-  })
-  .catch(error => {
-    console.error(error);
-    });;
+    })
+    .catch(error => {
+        console.error(error);
+    });
+  
+ 
 }
 
 chat();
