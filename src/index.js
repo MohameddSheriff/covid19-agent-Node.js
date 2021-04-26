@@ -75,16 +75,16 @@ const chat = () => {
             }
           };
 
-        axios.all([axios.request(countryRequest),axios.request(weatherRequest),axios.request(cityRequest)])
-        .then(axios.spread((countryResponse, weatherResponse, cityResponse) => {
+        Promise.all([axios.request(countryRequest),axios.request(weatherRequest),axios.request(cityRequest)])
+        .then(response => {
 
-            if (countryResponse.data.todayCases > 10000)
-            console.log(`${answers.city}! Amazing choice!\n${cityResponse.data.results[0].snippet}\nThe weather currently is ${weatherResponse.data.current.condition.text} and the tempreture feels like ${weatherResponse.data.current.temp_c}C\nHowever, COVID-19 is widely spread in ${countries.get(answers.city)}! In the last 24 Hours, there are ${countryResponse.data.todayCases} new cases reported..`);
+            if (response[0].data.todayCases > 10000)
+            console.log(`${answers.city}! Amazing choice!\n${response[2].data.results[0].snippet}\nThe weather currently is ${response[1].data.current.condition.text} and the tempreture feels like ${response[1].data.current.temp_c}C\nHowever, COVID-19 is widely spread in ${countries.get(answers.city)}! In the last 24 Hours, there are ${response[0].data.todayCases} new cases reported..`);
             else
-            console.log(`${answers.city}! Amazing choice!\n${cityResponse.data.results[0].snippet}\nThe weather currently is ${weatherResponse.data.current.condition.text} and the tempreture feels like ${weatherResponse.data.current.temp_c}C\nCOVID-19 situation in ${countries.get(answers.city)} is significantly getting better! In the last 24 Hours, only ${countryResponse.data.todayCases} new cases were reported..`);
+            console.log(`${answers.city}! Amazing choice!\n${response[2].data.results[0].snippet}\nThe weather currently is ${response[1].data.current.condition.text} and the tempreture feels like ${response[1].data.current.temp_c}C\nCOVID-19 situation in ${countries.get(answers.city)} is significantly getting better! In the last 24 Hours, only ${response[0].data.todayCases} new cases were reported..`);
 
             chat();
-        }))
+        })
         .catch(error => {
             console.error(error);
         });
